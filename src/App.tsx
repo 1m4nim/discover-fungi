@@ -1,3 +1,5 @@
+// src/App.tsx
+
 import { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { fetchObservations } from './api';
@@ -6,26 +8,23 @@ import { Observation } from './types';
 function App() {
   const [observations, setObservations] = useState<Observation[]>([]);
 
-  // データ取得ロジック
   useEffect(() => {
-    // 💡 API呼び出し
     fetchObservations().then(data => {
       console.log(`${data.length}件の観察データを取得しました。`);
       setObservations(data);
     });
   }, []);
 
-  // マップの中心と初期ズーム
   const center: [number, number] = [36.2048, 138.2529]; // 日本の中心
   const initialZoom = 6; 
 
   return (
-    // 🚨 必須: styleで高さを指定しないと、地図は見えません
     <MapContainer 
       center={center} 
       zoom={initialZoom} 
       scrollWheelZoom={true} 
-      style={{ height: '100vh', width: '100%' }} // 画面いっぱいに表示
+      // 🚨 必須: styleで高さを指定
+      style={{ height: '100vh', width: '100%' }} 
     >
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
