@@ -1,29 +1,29 @@
-// src/App.tsx
-
 import { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import { fetchObservations } from './api'; // ★ステップ1で作成したAPI関数をインポート
-import { Observation } from './types'; // ★型定義をインポート
+import { fetchObservations } from './api';
+import { Observation } from './types';
 
 function App() {
-  // 観察データを格納するための状態
+  // 観察データを格納するための状態を初期化
   const [observations, setObservations] = useState<Observation[]>([]);
 
-  // コンポーネントがマウントされたときにデータを取得
+  // コンポーネントがマウントされたときにAPIからデータを取得
   useEffect(() => {
     fetchObservations().then(data => {
       setObservations(data);
     });
   }, []);
 
-  // マップの中心座標 (データを取得する場所付近に設定すると良い)
+  // マップの中心座標（日本の中心付近）
   const center: [number, number] = [35.6895, 139.6917]; 
 
   return (
+    // MapContainerに高さを指定しないと、地図は表示されません！
     <MapContainer 
       center={center} 
-      zoom={8} 
-      style={{ height: '100vh', width: '100%' }} // 必ず高さを指定！
+      zoom={6} 
+      scrollWheelZoom={true} // マウスホイールでのズームを有効に
+      style={{ height: '100vh', width: '100%' }} 
     >
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -44,11 +44,11 @@ function App() {
                 <img 
                   src={obs.photoUrl} 
                   alt={obs.speciesName} 
-                  style={{ width: '100%', height: 'auto' }} 
+                  style={{ width: '100%', height: 'auto', marginBottom: '10px' }} 
                 />
               )}
               <a href={`https://www.inaturalist.org/observations/${obs.id}`} target="_blank" rel="noopener noreferrer">
-                iNaturalistで見る
+                iNaturalistで詳細を見る
               </a>
             </div>
           </Popup>
