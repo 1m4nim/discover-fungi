@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App.tsx';
 import './index.css';
+
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css'; 
 delete L.Icon.Default.prototype._getIconUrl;
