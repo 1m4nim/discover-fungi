@@ -1,4 +1,3 @@
-// 地図表示に必要な最小限の観察データの型
 export interface Observation {
   id: number;
   latitude: number;
