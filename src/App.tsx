@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import * as inatjs from 'inaturalistjs'; // ✅ 名前付きインポートに変更
+import inatjs from 'inaturalistjs'; // ✅ 名前付きインポートに変更
 
 // App.tsx内でObservation型を直接定義
 interface Observation { 
