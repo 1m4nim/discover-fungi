@@ -1,5 +1,3 @@
-// src/api.ts
-
 import inatjs from 'inaturalistjs';
 // 💡 StackBlitzでの問題を回避するため、拡張子を明記
 import { Observation } from './types.ts'; 
