@@ -1,6 +1,8 @@
 import inatjs from 'inaturalistjs';
 // 🚨 types.ts からのインポート。StackBlitzでの問題を回避するため、拡張子を明記します。
-import { Observation } from './types.ts'; 
+import inatjs from 'inaturalistjs';
+// 🚨 修正: 拡張子を明記
+import { Observation } from './types.ts';
 
 // APIからデータを取得する関数
 export async function fetchObservations(): Promise<Observation[]> {
