@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import inatjs from 'inaturalistjs'; // ✅ 名前付きインポートに変更
+import * as inatjs from 'inaturalistjs'; // ✅ * と as の間のスペースを修正
 
 // App.tsx内でObservation型を直接定義
 interface Observation { 
@@ -24,7 +24,11 @@ async function fetchObservations(): Promise<Observation[]> {
       order: 'desc',
     };
 
+    // 🚨 修正: inatjs.defaultまたはinatjsのどちらかにobservationsがあるか確認
+    // これにより、Vite環境での互換性問題を回避
     const api = (inatjs as any).default || inatjs; 
+    
+    // 修正: api変数を使ってobservationsにアクセス
     const response = await api.observations.search(params);
 
     return response.results.map((obs: any) => ({
