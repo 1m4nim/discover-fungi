@@ -2,15 +2,51 @@
 
 import { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import { fetchObservations } from './api';
-import { Observation } from './types';
+import inatjs from 'inaturalistjs'; // 💡 直接インポート
+
+// App.tsx内でObservation型を直接定義
+interface Observation { 
+  id: number;
+  latitude: number;
+  longitude: number;
+  speciesName: string;
+  photoUrl: string;
+}
+
+// App.tsx内でAPI関数を直接定義
+async function fetchObservations(): Promise<Observation[]> {
+  try {
+    const params = {
+      place_id: 110542, // Japan
+      iconic_taxa: 'Fungi', 
+      per_page: 50,
+      order_by: 'created_at',
+      order: 'desc',
+    };
+
+    const response = await inatjs.observations.search(params);
+
+    return response.results.map((obs: any) => ({
+      id: obs.id,
+      latitude: obs.geojson?.coordinates[1] ?? 0, 
+      longitude: obs.geojson?.coordinates[0] ?? 0,
+      speciesName: obs.taxon?.preferred_common_name || obs.species_guess || 'Unknown Species', 
+      photoUrl: obs.photos?.[0]?.url.replace('square', 'small') || '', 
+    })).filter((obs: Observation) => obs.latitude !== 0);
+
+  } catch (error) {
+    console.error('iNaturalist APIの呼び出しエラー:', error);
+    return [];
+  }
+}
 
 function App() {
   const [observations, setObservations] = useState<Observation[]>([]);
 
+  // データ取得ロジック
   useEffect(() => {
     fetchObservations().then(data => {
-      console.log(`${data.length}件の観察データを取得しました。`);
+      console.log(`取得データ数: ${data.length}`);
       setObservations(data);
     });
   }, []);
@@ -23,8 +59,7 @@ function App() {
       center={center} 
       zoom={initialZoom} 
       scrollWheelZoom={true} 
-      // 🚨 必須: styleで高さを指定
-      style={{ height: '100vh', width: '100%' }} 
+      style={{ height: '100vh', width: '100%' }} // 🚨 必須: styleで高さを指定
     >
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -47,9 +82,6 @@ function App() {
                   style={{ width: '100%', height: 'auto', display: 'block' }} 
                 />
               )}
-              <a href={`https://www.inaturalist.org/observations/${obs.id}`} target="_blank" rel="noopener noreferrer">
-                詳細を見る
-              </a>
             </div>
           </Popup>
         </Marker>
