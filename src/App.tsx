@@ -2,9 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import * as inatjs from 'inaturalistjs'; // ✅ * と as の間のスペースを修正
+import * as inatjs from 'inaturalistjs'; 
 
-// App.tsx内でObservation型を直接定義
+// Observation型を定義
 interface Observation { 
   id: number;
   latitude: number;
@@ -13,7 +13,7 @@ interface Observation {
   photoUrl: string;
 }
 
-// App.tsx内でAPI関数を直接定義
+// API関数を定義 (互換性問題を回避するための最終ロジック)
 async function fetchObservations(): Promise<Observation[]> {
   try {
     const params = {
@@ -24,11 +24,21 @@ async function fetchObservations(): Promise<Observation[]> {
       order: 'desc',
     };
 
-    // 🚨 修正: inatjs.defaultまたはinatjsのどちらかにobservationsがあるか確認
-    // これにより、Vite環境での互換性問題を回避
-    const api = (inatjs as any).default?.observations ? (inatjs as any).default : inatjs;
+    // 🚨 最終修正: inatjsの可能性のある全ての場所をチェック
+    // inatjs.default.default, inatjs.default, inatjs の順に試行
+    const api = 
+        (inatjs as any).default?.default || 
+        (inatjs as any).default || 
+        inatjs;
+
+    // apiの中にobservationsとsearch関数があることを確認する安全策
+    if (!api || !api.observations || typeof api.observations.search !== 'function') {
+        // ログを出して、API呼び出しをスキップ
+        console.error("iNaturalistjs library failed to load correctly. API call skipped.");
+        return [];
+    }
     
-    // 修正: api変数を使ってobservationsにアクセス
+    // 修正: api変数を使ってobservationsにアクセスし、APIを呼び出す
     const response = await api.observations.search(params);
 
     return response.results.map((obs: any) => ({
@@ -64,7 +74,7 @@ function App() {
       center={center} 
       zoom={initialZoom} 
       scrollWheelZoom={true} 
-      style={{ height: '100vh', width: '100%' }} // 🚨 必須: styleで高さを指定
+      style={{ height: '100vh', width: '100%' }} // 必須: 高さを指定
     >
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
