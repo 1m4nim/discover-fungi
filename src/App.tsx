@@ -24,7 +24,8 @@ async function fetchObservations(): Promise<Observation[]> {
       order: 'desc',
     };
 
-    const response = await inatjs.observations.search(params);
+    const api = (inatjs as any).default || inatjs; 
+    const response = await api.observations.search(params);
 
     return response.results.map((obs: any) => ({
       id: obs.id,
