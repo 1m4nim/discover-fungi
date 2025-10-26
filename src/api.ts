@@ -5,9 +5,9 @@ import { Observation } from './types';
 export async function fetchObservations(): Promise<Observation[]> {
   try {
     const params = {
-      // 例: 日本付近の鳥類を検索 (適宜変更してください)
+      // 例: 日本付近の菌類を検索 
       place_id: 110542, // Japan
-      iconic_taxa: 'Aves', // 鳥類
+      iconic_taxa: 'fungi', // 鳥類
       per_page: 50,       // 取得する件数
       order_by: 'created_at',
       order: 'desc',
