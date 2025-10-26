@@ -26,7 +26,7 @@ async function fetchObservations(): Promise<Observation[]> {
 
     // 🚨 修正: inatjs.defaultまたはinatjsのどちらかにobservationsがあるか確認
     // これにより、Vite環境での互換性問題を回避
-    const api = (inatjs as any).default || inatjs; 
+    const api = (inatjs as any).default?.observations ? (inatjs as any).default : inatjs;
     
     // 修正: api変数を使ってobservationsにアクセス
     const response = await api.observations.search(params);
