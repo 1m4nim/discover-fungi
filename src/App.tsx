@@ -34,4 +34,17 @@ function App() {
   )
 }
 
+function MapView(){
+  return (
+    <MapContainer center={[35.6895, 139.6917]} zoom={10} style={{ height: '500px', width: '100%' }}>
+      <TileLayer
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+      />
+      {/* 今後ここに Marker コンポーネントを追加 */}
+    </MapContainer>
+  );
+}
+
+
 export default App
