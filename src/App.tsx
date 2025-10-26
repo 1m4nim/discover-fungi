@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { fetchObservations } from './api';
 import { Observation } from './types';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 
 function App() {
   // 観察データを格納するための状態を初期化
